@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Builder | Modern CV Creator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            /* Base colors */
+            --background: #ffffff;
+            --foreground: #09090b;
+            
+            /* Card */
+            --card: #ffffff;
+            --card-foreground: #09090b;
+            
+            /* Muted */
+            --muted: #f4f4f5;
+            --muted-foreground: #71717a;
+            
+            /* Primary */
+            --primary: #18181b;
+            --primary-foreground: #ffffff;
+            
+            /* Secondary */
+            --secondary: #f4f4f5;
+            --secondary-foreground: #18181b;
+            
+            /* Accent */
+            --accent: #f4f4f5;
+            --accent-foreground: #18181b;
+            
+            /* Border */
+            --border: #e4e4e7;
+            
+            /* Input */
+            --input: #e4e4e7;
+            
+            /* Ring */
+            --ring: #18181b;
+            
+            /* Radius */
+            --radius: 0.5rem;
+            
+            /* Error */
+            --destructive: #ef4444;
+            --destructive-foreground: #fef2f2;
+            
+            /* Success */
+            --success: #22c55e;
+
+            /* Animation */
+            --transition-fast: 0.15s ease;
+            --transition-medium: 0.3s ease;
+            
+            /* Shadow */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        .dark {
+            --background: #09090b;
+            --foreground: #ffffff;
+            
+            --card: #1c1c1f;
+            --card-foreground: #ffffff;
+            
+            --muted: #1c1c1f;
+            --muted-foreground: #a1a1aa;
+            
+            --primary: #ffffff;
+            --primary-foreground: #09090b;
+            
+            --secondary: #27272a;
+            --secondary-foreground: #ffffff;
+            
+            --accent: #27272a;
+            --accent-foreground: #ffffff;
+            
+            --border: #27272a;
+            --input: #27272a;
+            --ring: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        html {
+            height: 100%;
+            font-size: 16px;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            min-height: 100vh;
+            line-height: 1.5;
+            font-weight: 400;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            min-height: 100vh;
+            gap: 32px;
+        }
+
+        .sidebar {
+            width: 280px;
+            background-color: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            position: sticky;
+            top: 24px;
+            height: fit-content;
+            border: 1px solid var(--border);
+            transition: all var(--transition-medium);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 32px;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--foreground);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--background);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-text span {
+            color: var(--muted-foreground);
+            font-weight: 400;
+            font-size: 13px;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .steps {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--muted-foreground);
+            gap: 12px;
+        }
+
+        .step:hover {
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+        }
+
+        .step.active {
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+            font-weight: 500;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--muted);
+            color: var(--muted-foreground);
+            font-size: 12px;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .step.active .step-number {
+            background-color: var(--foreground);
+            color: var(--background);
+        }
+
+        .step-name {
+            font-size: 14px;
+        }
+
+        .main {
+            flex: 1;
+            max-width: 800px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        .title p {
+            color: var(--muted-foreground);
+            font-size: 14px;
+        }
+
+        .mode-toggle {
+            background: var(--card);
+            border: 1px solid var(--border);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--foreground);
+            transition: all var(--transition-fast);
+        }
+
+        .mode-toggle:hover {
+            background-color: var(--accent);
+            color: var(--accent-foreground);
+        }
+
+        .content {
+            background-color: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all var(--transition-medium);
+            border: 1px solid var(--border);
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
+        }
+
+        .tip {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            background-color: var(--secondary);
+            border-radius: var(--radius);
+            margin: 24px 0;
+            gap: 12px;
+        }
+
+        .tip-icon {
+            margin-top: 2px;
+            color: var(--foreground);
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--secondary-foreground);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: all var(--transition-fast);
+            background-color: var(--background);
+            color: var(--foreground);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--ring);
+            box-shadow: 0 0 0 2px rgba(24, 24, 27, 0.1);
+        }
+
+        input:hover, textarea:hover, select:hover {
+            border-color: var(--ring);
+        }
+
+        input.error, textarea.error, select.error {
+            border-color: var(--destructive);
+        }
+
+        input.error:focus, textarea.error:focus, select.error:focus {
+            box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+        }
+
+        .error-message {
+            color: var(--destructive);
+            font-size: 12px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 0;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .template {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all var(--transition-medium);
+            background-color: var(--card);
+        }
+
+        .template:hover {
+            border-color: var(--ring);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .template.selected {
+            border-color: var(--ring);
+            box-shadow: 0 0 0 2px rgba(24, 24, 27, 0.1);
+        }
+
+        .template-preview {
+            height: 220px;
+            padding: 16px;
+            background-color: var(--secondary);
+        }
+
+        .template-name {
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            border-top: 1px solid var(--border);
+        }
+
+        .experience-item, .education-item, .skill-item {
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            position: relative;
+            background-color: var(--card);
+            transition: all var(--transition-fast);
+        }
+
+        .experience-item:hover, .education-item:hover, .skill-item:hover {
+            border-color: var(--ring);
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--muted-foreground);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius);
+            transition: all var(--transition-fast);
+        }
+
+        .delete-btn:hover {
+            background-color: var(--secondary);
+            color: var(--destructive);
+        }
+
+        .add-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--secondary);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius);
+            color: var(--muted-foreground);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .add-btn:hover {
+            background-color: var(--accent);
+            color: var(--accent-foreground);
+            border-color: var(--ring);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-back {
+            background-color: var(--secondary);
+            border: 1px solid var(--border);
+            color: var(--secondary-foreground);
+        }
+
+        .btn-back:hover:not(:disabled) {
+            background-color: var(--accent);
+            color: var(--accent-foreground);
+            border-color: var(--ring);
+        }
+
+        .btn-next {
+            background-color: var(--foreground);
+            border: 1px solid var(--foreground);
+            color: var(--background);
+        }
+
+        .btn-next:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .download-card {
+            text-align: center;
+            padding: 32px;
+        }
+
+        .download-icon {
+            font-size: 48px;
+            color: var(--foreground);
+            margin-bottom: 24px;
+        }
+
+        .download-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
+        }
+
+        .download-text {
+            font-size: 14px;
+            color: var(--muted-foreground);
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-download {
+            background-color: var(--foreground);
+            border: 1px solid var(--foreground);
+            color: var(--background);
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-download:hover:not(:disabled) {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-download:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--muted-foreground);
+            font-size: 13px;
+            margin-top: 16px;
+        }
+
+        .footer a {
+            color: var(--foreground);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-note {
+            margin-top: 20px;
+            padding: 16px;
+            background-color: var(--secondary);
+            border-radius: var(--radius);
+            font-size: 13px;
+            color: var(--muted-foreground);
+            text-align: center;
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform var(--transition-medium);
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success);
+        }
+
+        .notification.error {
+            background-color: var(--destructive);
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                padding: 16px;
+                gap: 24px;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+
+            .main {
+                max-width: 100%;
+            }
+
+            .row {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .content {
+                padding: 24px;
+            }
+
+            .notification {
+                right: 16px;
+                left: 16px;
+                max-width: none;
+                transform: translateY(-100px);
+            }
+
+            .notification.show {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">R</div>
+                <div class="logo-text">
+                    Resume Builder
+                    <span>100% free, no signup</span>
+                </div>
+            </div>
+            <div class="steps" id="steps-nav">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-name">Design</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-name">Personal Details</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-name">Summary / Profile</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-name">Work History</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-name">Education</div>
+                </div>
+                <div class="step" data-step="6">
+                    <div class="step-number">6</div>
+                    <div class="step-name">Skills</div>
+                </div>
+                <div class="step" data-step="7">
+                    <div class="step-number">7</div>
+                    <div class="step-name">Download PDF</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main">
+            <div class="header">
+                <div class="title">
+                    <h1>Resume Builder</h1>
+                    <p>Create a professional resume in minutes</p>
+                </div>
+                <button class="mode-toggle" id="modeToggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="content">
+                <form id="resume-form">
+                    <!-- Step 1: Design -->
+                    <div class="form-step active" id="step1">
+                        <h2 class="step-title">Resume Template Selection</h2>
+                        <p>Choose a template that matches your style and industry. Each template is optimized for ATS compatibility.</p>
+                        
+                        <div class="template-grid">
+                            <div class="template selected" data-template="minimal">
+                                <div class="template-preview">
+                                    <div style="height: 20px; width: 70%; background-color: var(--foreground); margin-bottom: 15px; opacity: 0.9; border-radius: 4px;"></div>
+                                    <div style="height: 10px; width: 40%; background-color: var(--foreground); margin-bottom: 25px; opacity: 0.6; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 90%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 85%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 80%; background-color: var(--foreground); margin-bottom: 20px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 12px; width: 50%; background-color: var(--foreground); margin-bottom: 15px; opacity: 0.8; border-radius: 3px;"></div>
+                                    <div style="height: 8px; width: 90%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 85%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                </div>
+                                <div class="template-name">Minimal</div>
+                            </div>
+                            <div class="template" data-template="modern">
+                                <div class="template-preview">
+                                    <div style="height: 30px; width: 100%; background-color: var(--foreground); margin-bottom: 15px; border-radius: 4px;"></div>
+                                    <div style="display: flex; height: 160px; gap: 10px;">
+                                        <div style="width: 30%; background-color: var(--foreground); padding: 10px; opacity: 0.1; border-radius: 4px;">
+                                            <div style="height: 10px; width: 80%; background-color: var(--foreground); margin-bottom: 10px; border-radius: 2px;"></div>
+                                            <div style="height: 8px; width: 70%; background-color: var(--foreground); margin-bottom: 20px; border-radius: 2px;"></div>
+                                            <div style="height: 10px; width: 80%; background-color: var(--foreground); margin-bottom: 10px; border-radius: 2px;"></div>
+                                            <div style="height: 8px; width: 70%; background-color: var(--foreground); border-radius: 2px;"></div>
+                                        </div>
+                                        <div style="width: 70%; padding: 10px;">
+                                            <div style="height: 12px; width: 60%; background-color: var(--foreground); margin-bottom: 15px; opacity: 0.8; border-radius: 3px;"></div>
+                                            <div style="height: 8px; width: 90%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                            <div style="height: 8px; width: 85%; background-color: var(--foreground); margin-bottom: 15px; opacity: 0.3; border-radius: 2px;"></div>
+                                            <div style="height: 12px; width: 60%; background-color: var(--foreground); margin-bottom: 15px; opacity: 0.8; border-radius: 3px;"></div>
+                                            <div style="height: 8px; width: 90%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                            <div style="height: 8px; width: 85%; background-color: var(--foreground); opacity: 0.3; border-radius: 2px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="template-name">Modern</div>
+                            </div>
+                            <div class="template" data-template="professional">
+                                <div class="template-preview">
+                                    <div style="height: 40px; width: 100%; background-color: var(--foreground); margin-bottom: 15px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">
+                                        <div style="height: 15px; width: 60%; background-color: var(--background); border-radius: 2px;"></div>
+                                    </div>
+                                    <div style="height: 10px; width: 40%; background-color: var(--foreground); margin-bottom: 15px; opacity: 0.6; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 90%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 85%; background-color: var(--foreground); margin-bottom: 15px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 15px; width: 30%; background-color: var(--foreground); margin-bottom: 10px; opacity: 0.8; border-radius: 3px;"></div>
+                                    <div style="height: 8px; width: 90%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 85%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 80%; background-color: var(--foreground); opacity: 0.3; border-radius: 2px;"></div>
+                                </div>
+                                <div class="template-name">Professional</div>
+                            </div>
+                            <div class="template" data-template="creative">
+                                <div class="template-preview">
+                                    <div style="height: 50px; display: flex; margin-bottom: 15px;">
+                                        <div style="width: 50px; height: 50px; border-radius: 25px; background-color: var(--foreground); margin-right: 15px; opacity: 0.8;"></div>
+                                        <div style="flex: 1;">
+                                            <div style="height: 15px; width: 60%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.9; border-radius: 3px;"></div>
+                                            <div style="height: 10px; width: 40%; background-color: var(--foreground); opacity: 0.6; border-radius: 2px;"></div>
+                                        </div>
+                                    </div>
+                                    <div style="height: 8px; width: 90%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 85%; background-color: var(--foreground); margin-bottom: 15px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 12px; width: 40%; background-color: var(--foreground); margin-bottom: 10px; opacity: 0.8; border-radius: 3px;"></div>
+                                    <div style="height: 8px; width: 90%; background-color: var(--foreground); margin-bottom: 8px; opacity: 0.3; border-radius: 2px;"></div>
+                                    <div style="height: 8px; width: 85%; background-color: var(--foreground); opacity: 0.3; border-radius: 2px;"></div>
+                                </div>
+                                <div class="template-name">Creative</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="selected-template" name="template" value="minimal">
+                        
+                        <div class="buttons">
+                            <button type="button" class="btn btn-back" disabled="">Back</button>
+                            <button type="button" class="btn btn-next" id="step1-next">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Personal Details -->
+                    <div class="form-step" id="step2">
+                        <h2 class="step-title">Your Personal Information</h2>
+                        
+                        <div class="tip">
+                            <div class="tip-icon">💡</div>
+                            <div class="tip-text">
+                                Keep your header concise and professional. Use a reliable contact number and professional email address. You can exclude any information you prefer not to share.
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="fullName">Full Name*</label>
+                            <input type="text" id="fullName" name="fullName" placeholder="e.g., John Smith" required="">
+                            <div class="error-message" id="fullName-error">Please enter your full name</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address*</label>
+                            <input type="email" id="email" name="email" placeholder="e.g., john.smith@example.com" required="">
+                            <div class="error-message" id="email-error">Please enter a valid email address</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number*</label>
+                            <input type="tel" id="phone" name="phone" placeholder="e.g., (123) 456-7890" required="">
+                            <div class="error-message" id="phone-error">Please enter a valid phone number</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="website">Website or Social Link (Optional)</label>
+                            <input type="url" id="website" name="website" placeholder="e.g., linkedin.com/in/johnsmith">
+                            <div class="error-message" id="website-error">Please enter a valid URL (include http:// or https://)</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Address (Optional)</label>
+                            <input type="text" id="address" name="address" placeholder="e.g., San Francisco, CA">
+                        </div>
+                        
+                        <div class="buttons">
+                            <button type="button" class="btn btn-back" id="step2-back">Back</button>
+                            <button type="button" class="btn btn-next" id="step2-next">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Summary/Profile -->
+                    <div class="form-step" id="step3">
+                        <h2 class="step-title">Profile / Professional Summary</h2>
+                        
+                        <div class="tip">
+                            <div class="tip-icon">💡</div>
+                            <div class="tip-text">
+                                Your summary should be a concise snapshot of your resume. Highlight key strengths and valuable skills in 2-3 sentences. Use first-person implied style for professional impact.
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="summary">Professional Summary*</label>
+                            <textarea id="summary" name="summary" rows="5" placeholder="e.g., Results-driven marketing professional with over 5 years of experience in digital marketing strategy and campaign management. Proven track record of increasing engagement and conversion rates. Skilled in SEO, content creation, and social media marketing." required=""></textarea>
+                            <div class="error-message" id="summary-error">Please enter your professional summary</div>
+                        </div>
+                        
+                        <div class="buttons">
+                            <button type="button" class="btn btn-back" id="step3-back">Back</button>
+                            <button type="button" class="btn btn-next" id="step3-next">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Work Experience -->
+                    <div class="form-step" id="step4">
+                        <h2 class="step-title">Work Experience</h2>
+                        
+                        <div class="tip">
+                            <div class="tip-icon">💡</div>
+                            <div class="tip-text">
+                                List your experience in reverse chronological order. Use 3-5 bullet points per role highlighting achievements. Use past tense for previous jobs and present tense for current positions.
+                            </div>
+                        </div>
+                        
+                        <div id="work-experience-container">
+                            <div class="experience-item" data-index="0">
+                                <button type="button" class="delete-btn" title="Remove this experience">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 6h18"></path>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                                
+                                <div class="form-group">
+                                    <label for="jobTitle0">Your Role/Title*</label>
+                                    <input type="text" id="jobTitle0" name="jobTitle[]" placeholder="e.g., Marketing Manager" required="">
+                                    <div class="error-message" id="jobTitle0-error">Please enter your job title</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="employer0">Employer Name*</label>
+                                    <input type="text" id="employer0" name="employer[]" placeholder="e.g., ABC Company" required="">
+                                    <div class="error-message" id="employer0-error">Please enter your employer name</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="jobLocation0">Location</label>
+                                    <input type="text" id="jobLocation0" name="jobLocation[]" placeholder="e.g., San Francisco, CA">
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="jobStartDate0">Start Date*</label>
+                                            <input type="month" id="jobStartDate0" name="jobStartDate[]" required="">
+                                            <div class="error-message" id="jobStartDate0-error">Please select a start date</div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="jobEndDate0">End Date (leave empty if current)</label>
+                                            <input type="month" id="jobEndDate0" name="jobEndDate[]">
+                                            <div class="error-message" id="jobEndDate0-error">End date must be after start date</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="jobDescription0">Job Description and Achievements*</label>
+                                    <textarea id="jobDescription0" name="jobDescription[]" rows="4" placeholder="e.g., Developed and implemented digital marketing strategies that increased web traffic by 45% and lead generation by 30% over a six-month period." required=""></textarea>
+                                    <div class="error-message" id="jobDescription0-error">Please enter job description</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="add-btn" id="add-experience">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add another work experience
+                        </button>
+                        
+                        <div class="buttons">
+                            <button type="button" class="btn btn-back" id="step4-back">Back</button>
+                            <button type="button" class="btn btn-next" id="step4-next">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Education -->
+                    <div class="form-step" id="step5">
+                        <h2 class="step-title">Education</h2>
+                        
+                        <div class="tip">
+                            <div class="tip-icon">💡</div>
+                            <div class="tip-text">
+                                List education from highest to lowest degree. Include professional training and certifications. Skip high school details if you have 3+ years of work experience.
+                            </div>
+                        </div>
+                        
+                        <div id="education-container">
+                            <div class="education-item" data-index="0">
+                                <button type="button" class="delete-btn" title="Remove this education">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 6h18"></path>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                                
+                                <div class="form-group">
+                                    <label for="school0">School/University Name*</label>
+                                    <input type="text" id="school0" name="school[]" placeholder="e.g., University of California" required="">
+                                    <div class="error-message" id="school0-error">Please enter your school name</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="degree0">Degree and Field of Study*</label>
+                                    <input type="text" id="degree0" name="degree[]" placeholder="e.g., Bachelor of Science in Computer Science" required="">
+                                    <div class="error-message" id="degree0-error">Please enter your degree</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="eduLocation0">Location</label>
+                                    <input type="text" id="eduLocation0" name="eduLocation[]" placeholder="e.g., Berkeley, CA">
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="eduStartDate0">Start Date*</label>
+                                            <input type="month" id="eduStartDate0" name="eduStartDate[]" required="">
+                                            <div class="error-message" id="eduStartDate0-error">Please select a start date</div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="eduEndDate0">End Date (leave empty if current)</label>
+                                            <input type="month" id="eduEndDate0" name="eduEndDate[]">
+                                            <div class="error-message" id="eduEndDate0-error">End date must be after start date</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="add-btn" id="add-education">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add another education
+                        </button>
+                        
+                        <div class="buttons">
+                            <button type="button" class="btn btn-back" id="step5-back">Back</button>
+                            <button type="button" class="btn btn-next" id="step5-next">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: Skills -->
+                    <div class="form-step" id="step6">
+                        <h2 class="step-title">Skills</h2>
+                        
+                        <div class="tip">
+                            <div class="tip-icon">💡</div>
+                            <div class="tip-text">
+                                Focus 80% on hard skills relevant to the job and 20% on soft skills that showcase your personal attributes. Be specific about technical competencies.
+                            </div>
+                        </div>
+                        
+                        <div id="skills-container">
+                            <div class="skill-item" data-index="0">
+                                <button type="button" class="delete-btn" title="Remove this skill">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 6h18"></path>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                                
+                                <div class="form-group">
+                                    <label for="skill0">Skill*</label>
+                                    <input type="text" id="skill0" name="skill[]" placeholder="e.g., Search Engine Optimization (SEO)" required="">
+                                    <div class="error-message" id="skill0-error">Please enter a skill</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="add-btn" id="add-skill">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add another skill
+                        </button>
+                        
+                        <div class="buttons">
+                            <button type="button" class="btn btn-back" id="step6-back">Back</button>
+                            <button type="button" class="btn btn-next" id="step6-next">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 7: Download -->
+                    <div class="form-step" id="step7">
+                        <div class="download-card">
+                            <div class="download-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                </svg>
+                            </div>
+                            <h2 class="download-title">Your resume is ready for download</h2>
+                            <p class="download-text">You can review your information or download your resume as a PDF. Your data is not saved after closing this page.</p>
+                            <button type="button" class="btn-download" id="download-resume">Download Resume</button>
+                        </div>
+                        
+                        <div class="privacy-note">
+                            This resume builder doesn't store any of your information. All data is processed locally in your browser and will be erased when you close the page.
+                        </div>
+                        
+                        <div class="buttons">
+                            <button type="button" class="btn btn-back" id="step7-back">Back</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="footer">
+                © 2025 Resume Builder | <a href="#">Terms</a> | <a href="#">Privacy</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Resume form data structure
+        const resumeData = {
+            template: 'minimal',
+            personalDetails: {
+                fullName: '',
+                email: '',
+                phone: '',
+                website: '',
+                address: ''
+            },
+            summary: '',
+            workExperience: [
+                {
+                    jobTitle: '',
+                    employer: '',
+                    location: '',
+                    startDate: '',
+                    endDate: '',
+                    description: ''
+                }
+            ],
+            education: [
+                {
+                    school: '',
+                    degree: '',
+                    location: '',
+                    startDate: '',
+                    endDate: ''
+                }
+            ],
+            skills: [
+                {
+                    skill: ''
+                }
+            ]
+        };
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            // Create new notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Hide notification after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Auto-detect dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // DOM elements
+        const form = document.getElementById('resume-form');
+        const steps = document.querySelectorAll('.form-step');
+        const stepNav = document.querySelectorAll('.step');
+        let currentStep = 1;
+
+        // Toggle dark mode
+        const modeToggle = document.getElementById('modeToggle');
+        modeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            
+            // Change the icon
+            if (document.documentElement.classList.contains('dark')) {
+                modeToggle.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                `;
+            } else {
+                modeToggle.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                `;
+            }
+        });
+
+        // Template selection
+        const templates = document.querySelectorAll('.template');
+        const selectedTemplateInput = document.getElementById('selected-template');
+        
+        templates.forEach(template => {
+            template.addEventListener('click', () => {
+                templates.forEach(t => t.classList.remove('selected'));
+                template.classList.add('selected');
+                selectedTemplateInput.value = template.dataset.template;
+                resumeData.template = template.dataset.template;
+            });
+        });
+
+        // Navigation between steps
+        function goToStep(step) {
+            // Hide all steps
+            steps.forEach(s => s.classList.remove('active'));
+            
+            // Show the current step
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            // Update step navigation
+            stepNav.forEach(nav => {
+                nav.classList.remove('active');
+                if (parseInt(nav.dataset.step) === step) {
+                    nav.classList.add('active');
+                }
+            });
+            
+            // Update current step
+            currentStep = step;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Step navigation click
+        document.getElementById('steps-nav').addEventListener('click', (e) => {
+            const stepElement = e.target.closest('.step');
+            if (stepElement) {
+                const step = parseInt(stepElement.dataset.step);
+                
+                // Only allow navigation to completed steps or the next step
+                if (step <= currentStep) {
+                    goToStep(step);
+                }
+            }
+        });
+
+        // Validation functions
+        function validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        }
+
+        function validatePhone(phone) {
+            const re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+            return phone === '' || re.test(phone);
+        }
+
+        function validateUrl(url) {
+            if (url === '') return true;
+            try {
+                new URL(url);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function validateDateRange(startDate, endDate) {
+            if (!endDate) return true;
+            return new Date(startDate) <= new Date(endDate);
+        }
+
+        function showError(input, message) {
+            input.classList.add('error');
+            const errorElement = document.getElementById(`${input.id}-error`);
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('visible');
+            }
+            return false;
+        }
+
+        function clearError(input) {
+            input.classList.remove('error');
+            const errorElement = document.getElementById(`${input.id}-error`);
+            if (errorElement) {
+                errorElement.classList.remove('visible');
+            }
+            return true;
+        }
+
+        // Validate personal details
+        function validatePersonalDetails() {
+            let isValid = true;
+            
+            // Full Name
+            const fullName = document.getElementById('fullName');
+            if (fullName.value.trim() === '') {
+                isValid = false;
+                showError(fullName, 'Please enter your full name');
+            } else {
+                clearError(fullName);
+                resumeData.personalDetails.fullName = fullName.value.trim();
+            }
+            
+            // Email
+            const email = document.getElementById('email');
+            if (!validateEmail(email.value)) {
+                isValid = false;
+                showError(email, 'Please enter a valid email address');
+            } else {
+                clearError(email);
+                resumeData.personalDetails.email = email.value.trim();
+            }
+            
+            // Phone
+            const phone = document.getElementById('phone');
+            if (phone.value.trim() === '' || !validatePhone(phone.value)) {
+                isValid = false;
+                showError(phone, 'Please enter a valid phone number');
+            } else {
+                clearError(phone);
+                resumeData.personalDetails.phone = phone.value.trim();
+            }
+            
+            // Website (optional)
+            const website = document.getElementById('website');
+            if (website.value.trim() !== '' && !validateUrl(website.value)) {
+                isValid = false;
+                showError(website, 'Please enter a valid URL (include http:// or https://)');
+            } else {
+                clearError(website);
+                resumeData.personalDetails.website = website.value.trim();
+            }
+            
+            // Address (optional)
+            const address = document.getElementById('address');
+            resumeData.personalDetails.address = address.value.trim();
+            
+            return isValid;
+        }
+
+        // Validate summary
+        function validateSummary() {
+            let isValid = true;
+            
+            const summary = document.getElementById('summary');
+            if (summary.value.trim() === '') {
+                isValid = false;
+                showError(summary, 'Please enter your professional summary');
+            } else {
+                clearError(summary);
+                resumeData.summary = summary.value.trim();
+            }
+            
+            return isValid;
+        }
+
+        // Validate work experience
+        function validateWorkExperience() {
+            let isValid = true;
+            resumeData.workExperience = [];
+            
+            const experienceItems = document.querySelectorAll('.experience-item');
+            experienceItems.forEach((item, index) => {
+                const jobTitle = document.getElementById(`jobTitle${index}`);
+                const employer = document.getElementById(`employer${index}`);
+                const location = document.getElementById(`jobLocation${index}`);
+                const startDate = document.getElementById(`jobStartDate${index}`);
+                const endDate = document.getElementById(`jobEndDate${index}`);
+                const description = document.getElementById(`jobDescription${index}`);
+                
+                // Required fields
+                if (jobTitle.value.trim() === '') {
+                    isValid = false;
+                    showError(jobTitle, 'Please enter your job title');
+                } else {
+                    clearError(jobTitle);
+                }
+                
+                if (employer.value.trim() === '') {
+                    isValid = false;
+                    showError(employer, 'Please enter your employer name');
+                } else {
+                    clearError(employer);
+                }
+                
+                if (startDate.value === '') {
+                    isValid = false;
+                    showError(startDate, 'Please select a start date');
+                } else {
+                    clearError(startDate);
+                }
+                
+                // Validate date range
+                if (startDate.value && endDate.value && !validateDateRange(startDate.value, endDate.value)) {
+                    isValid = false;
+                    showError(endDate, 'End date must be after start date');
+                } else {
+                    clearError(endDate);
+                }
+                
+                if (description.value.trim() === '') {
+                    isValid = false;
+                    showError(description, 'Please enter job description');
+                } else {
+                    clearError(description);
+                }
+                
+                // Add to resumeData
+                resumeData.workExperience.push({
+                    jobTitle: jobTitle.value.trim(),
+                    employer: employer.value.trim(),
+                    location: location.value.trim(),
+                    startDate: startDate.value,
+                    endDate: endDate.value,
+                    description: description.value.trim()
+                });
+            });
+            
+            return isValid;
+        }
+
+        // Validate education
+        function validateEducation() {
+            let isValid = true;
+            resumeData.education = [];
+            
+            const educationItems = document.querySelectorAll('.education-item');
+            educationItems.forEach((item, index) => {
+                const school = document.getElementById(`school${index}`);
+                const degree = document.getElementById(`degree${index}`);
+                const location = document.getElementById(`eduLocation${index}`);
+                const startDate = document.getElementById(`eduStartDate${index}`);
+                const endDate = document.getElementById(`eduEndDate${index}`);
+                
+                // Required fields
+                if (school.value.trim() === '') {
+                    isValid = false;
+                    showError(school, 'Please enter your school name');
+                } else {
+                    clearError(school);
+                }
+                
+                if (degree.value.trim() === '') {
+                    isValid = false;
+                    showError(degree, 'Please enter your degree');
+                } else {
+                    clearError(degree);
+                }
+                
+                if (startDate.value === '') {
+                    isValid = false;
+                    showError(startDate, 'Please select a start date');
+                } else {
+                    clearError(startDate);
+                }
+                
+                // Validate date range
+                if (startDate.value && endDate.value && !validateDateRange(startDate.value, endDate.value)) {
+                    isValid = false;
+                    showError(endDate, 'End date must be after start date');
+                } else {
+                    clearError(endDate);
+                }
+                
+                // Add to resumeData
+                resumeData.education.push({
+                    school: school.value.trim(),
+                    degree: degree.value.trim(),
+                    location: location.value.trim(),
+                    startDate: startDate.value,
+                    endDate: endDate.value
+                });
+            });
+            
+            return isValid;
+        }
+
+        // Validate skills
+        function validateSkills() {
+            let isValid = true;
+            resumeData.skills = [];
+            
+            const skillItems = document.querySelectorAll('.skill-item');
+            skillItems.forEach((item, index) => {
+                const skill = document.getElementById(`skill${index}`);
+                
+                if (skill.value.trim() === '') {
+                    isValid = false;
+                    showError(skill, 'Please enter a skill');
+                } else {
+                    clearError(skill);
+                }
+                
+                // Add to resumeData
+                resumeData.skills.push({
+                    skill: skill.value.trim()
+                });
+            });
+            
+            return isValid;
+        }
+
+        // Download resume
+        document.getElementById('download-resume').addEventListener('click', async () => {
+            // Validate all data before downloading
+            const isPersonalValid = validatePersonalDetails();
+            const isSummaryValid = validateSummary();
+            const isWorkValid = validateWorkExperience();
+            const isEducationValid = validateEducation();
+            const isSkillsValid = validateSkills();
+            
+            if (!isPersonalValid || !isSummaryValid || !isWorkValid || !isEducationValid || !isSkillsValid) {
+                showNotification('Please fix the validation errors before downloading your resume.', 'error');
+                return;
+            }
+            
+            try {
+                // Show loading state
+                const downloadBtn = document.getElementById('download-resume');
+                const originalText = downloadBtn.textContent;
+                downloadBtn.textContent = 'Generating PDF...';
+                downloadBtn.disabled = true;
+                
+                // Send data to backend
+                const response = await fetch('/api/resume/generate-pdf', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(resumeData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to generate PDF');
+                }
+                
+                // Get the PDF blob
+                const blob = await response.blob();
+                
+                // Create download link
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `${resumeData.personalDetails.fullName.replace(/\s+/g, '_')}_Resume.pdf`;
+                
+                // Trigger download
+                document.body.appendChild(a);
+                a.click();
+                
+                // Cleanup
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                // Reset button
+                downloadBtn.textContent = originalText;
+                downloadBtn.disabled = false;
+                
+                // Show success message
+                showNotification('Your resume has been downloaded successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Download error:', error);
+                
+                // Reset button
+                const downloadBtn = document.getElementById('download-resume');
+                downloadBtn.textContent = 'Download Resume';
+                downloadBtn.disabled = false;
+                
+                // Show error message
+                showNotification(`Error: ${error.message}`, 'error');
+            }
+        });
+
+        // Event listeners for navigation buttons
+        document.getElementById('step1-next').addEventListener('click', () => {
+            goToStep(2);
+        });
+
+        document.getElementById('step2-back').addEventListener('click', () => {
+            goToStep(1);
+        });
+
+        document.getElementById('step2-next').addEventListener('click', () => {
+            if (validatePersonalDetails()) {
+                goToStep(3);
+            }
+        });
+
+        document.getElementById('step3-back').addEventListener('click', () => {
+            goToStep(2);
+        });
+
+        document.getElementById('step3-next').addEventListener('click', () => {
+            if (validateSummary()) {
+                goToStep(4);
+            }
+        });
+
+        document.getElementById('step4-back').addEventListener('click', () => {
+            goToStep(3);
+        });
+
+        document.getElementById('step4-next').addEventListener('click', () => {
+            if (validateWorkExperience()) {
+                goToStep(5);
+            }
+        });
+
+        document.getElementById('step5-back').addEventListener('click', () => {
+            goToStep(4);
+        });
+
+        document.getElementById('step5-next').addEventListener('click', () => {
+            if (validateEducation()) {
+                goToStep(6);
+            }
+        });
+
+        document.getElementById('step6-back').addEventListener('click', () => {
+            goToStep(5);
+        });
+
+        document.getElementById('step6-next').addEventListener('click', () => {
+            if (validateSkills()) {
+                goToStep(7);
+            }
+        });
+
+        document.getElementById('step7-back').addEventListener('click', () => {
+            goToStep(6);
+        });
+
+        // Add work experience
+        let workExpCounter = 1;
+        document.getElementById('add-experience').addEventListener('click', () => {
+            const container = document.getElementById('work-experience-container');
+            const newExperience = document.createElement('div');
+            newExperience.className = 'experience-item';
+            newExperience.dataset.index = workExpCounter;
+            
+            newExperience.innerHTML = `
+                <button type="button" class="delete-btn" title="Remove this experience">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+                
+                <div class="form-group">
+                    <label for="jobTitle${workExpCounter}">Your Role/Title*</label>
+                    <input type="text" id="jobTitle${workExpCounter}" name="jobTitle[]" placeholder="e.g., Marketing Manager" required>
+                    <div class="error-message" id="jobTitle${workExpCounter}-error">Please enter your job title</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="employer${workExpCounter}">Employer Name*</label>
+                    <input type="text" id="employer${workExpCounter}" name="employer[]" placeholder="e.g., ABC Company" required>
+                    <div class="error-message" id="employer${workExpCounter}-error">Please enter your employer name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobLocation${workExpCounter}">Location</label>
+                    <input type="text" id="jobLocation${workExpCounter}" name="jobLocation[]" placeholder="e.g., San Francisco, CA">
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="jobStartDate${workExpCounter}">Start Date*</label>
+                            <input type="month" id="jobStartDate${workExpCounter}" name="jobStartDate[]" required>
+                            <div class="error-message" id="jobStartDate${workExpCounter}-error">Please select a start date</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="jobEndDate${workExpCounter}">End Date (leave empty if current)</label>
+                            <input type="month" id="jobEndDate${workExpCounter}" name="jobEndDate[]">
+                            <div class="error-message" id="jobEndDate${workExpCounter}-error">End date must be after start date</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobDescription${workExpCounter}">Job Description and Achievements*</label>
+                    <textarea id="jobDescription${workExpCounter}" name="jobDescription[]" rows="4" placeholder="e.g., Developed and implemented digital marketing strategies that increased web traffic by 45% and lead generation by 30% over a six-month period." required></textarea>
+                    <div class="error-message" id="jobDescription${workExpCounter}-error">Please enter job description</div>
+                </div>
+            `;
+            
+            container.appendChild(newExperience);
+            
+            // Add event listener to delete button
+            const deleteBtn = newExperience.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', () => {
+                container.removeChild(newExperience);
+            });
+            
+            workExpCounter++;
+        });
+
+        // Add education
+        let educationCounter = 1;
+        document.getElementById('add-education').addEventListener('click', () => {
+            const container = document.getElementById('education-container');
+            const newEducation = document.createElement('div');
+            newEducation.className = 'education-item';
+            newEducation.dataset.index = educationCounter;
+            
+            newEducation.innerHTML = `
+                <button type="button" class="delete-btn" title="Remove this education">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+                
+                <div class="form-group">
+                    <label for="school${educationCounter}">School/University Name*</label>
+                    <input type="text" id="school${educationCounter}" name="school[]" placeholder="e.g., University of California" required>
+                    <div class="error-message" id="school${educationCounter}-error">Please enter your school name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="degree${educationCounter}">Degree and Field of Study*</label>
+                    <input type="text" id="degree${educationCounter}" name="degree[]" placeholder="e.g., Bachelor of Science in Computer Science" required>
+                    <div class="error-message" id="degree${educationCounter}-error">Please enter your degree</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eduLocation${educationCounter}">Location</label>
+                    <input type="text" id="eduLocation${educationCounter}" name="eduLocation[]" placeholder="e.g., Berkeley, CA">
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="eduStartDate${educationCounter}">Start Date*</label>
+                            <input type="month" id="eduStartDate${educationCounter}" name="eduStartDate[]" required>
+                            <div class="error-message" id="eduStartDate${educationCounter}-error">Please select a start date</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="eduEndDate${educationCounter}">End Date (leave empty if current)</label>
+                            <input type="month" id="eduEndDate${educationCounter}" name="eduEndDate[]">
+                            <div class="error-message" id="eduEndDate${educationCounter}-error">End date must be after start date</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(newEducation);
+            
+            // Add event listener to delete button
+            const deleteBtn = newEducation.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', () => {
+                container.removeChild(newEducation);
+            });
+            
+            educationCounter++;
+        });
+
+        // Add skill
+        let skillCounter = 1;
+        document.getElementById('add-skill').addEventListener('click', () => {
+            const container = document.getElementById('skills-container');
+            const newSkill = document.createElement('div');
+            newSkill.className = 'skill-item';
+            newSkill.dataset.index = skillCounter;
+            
+            newSkill.innerHTML = `
+                <button type="button" class="delete-btn" title="Remove this skill">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
+                
+                <div class="form-group">
+                    <label for="skill${skillCounter}">Skill*</label>
+                    <input type="text" id="skill${skillCounter}" name="skill[]" placeholder="e.g., Project Management" required>
+                    <div class="error-message" id="skill${skillCounter}-error">Please enter a skill</div>
+                </div>
+            `;
+            
+            container.appendChild(newSkill);
+            
+            // Add event listener to delete button
+            const deleteBtn = newSkill.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', () => {
+                container.removeChild(newSkill);
+            });
+            
+            skillCounter++;
+        });
+
+        // Initial delete button handlers
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const item = e.target.closest('.experience-item, .education-item, .skill-item');
+                const container = item.parentElement;
+                
+                // Don't remove if it's the only item
+                if (container.children.length > 1) {
+                    container.removeChild(item);
+                }
+            });
+        });
+
+        // Form input validation on blur
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('blur', () => {
+                // Skip validation for non-required fields if empty
+                if (!input.required && input.value.trim() === '') {
+                    clearError(input);
+                    return;
+                }
+                
+                // Email validation
+                if (input.type === 'email') {
+                    if (!validateEmail(input.value)) {
+                        showError(input, 'Please enter a valid email address');
+                    } else {
+                        clearError(input);
+                    }
+                }
+                
+                // Phone validation
+                else if (input.id.includes('phone')) {
+                    if (!validatePhone(input.value)) {
+                        showError(input, 'Please enter a valid phone number');
+                    } else {
+                        clearError(input);
+                    }
+                }
+                
+                // URL validation
+                else if (input.type === 'url') {
+                    if (input.value.trim() !== '' && !validateUrl(input.value)) {
+                        showError(input, 'Please enter a valid URL (include http:// or https://)');
+                    } else {
+                        clearError(input);
+                    }
+                }
+                
+                // Date range validation
+                else if (input.type === 'month' && input.id.includes('EndDate')) {
+                    const index = input.id.match(/\d+/)[0];
+                    const type = input.id.includes('job') ? 'job' : 'edu';
+                    const startDate = document.getElementById(`${type}StartDate${index}`);
+                    
+                    if (input.value && startDate.value && !validateDateRange(startDate.value, input.value)) {
+                        showError(input, 'End date must be after start date');
+                    } else {
+                        clearError(input);
+                    }
+                }
+                
+                // Required field validation
+                else if (input.required && input.value.trim() === '') {
+                    showError(input, 'This field is required');
+                } else {
+                    clearError(input);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
