@@ -1,6 +1,28 @@
 *Resume Builder*
 
-- *A modern web application that helps users create professional resumes in minutes.*
+- *Web application that helps users create professional resumes in minutes.*
+
+*Features*
+
+- *4 professional templates*
+- *Step-by-step guided process*
+- *PDF download*
+- *No registration required*
+- *Mobile responsive*
+
+*Prerequisites*
+
+- *Node.js*
+- *npm or yarn*
+
+*Installation & Setup*
+
+```php
+git clone https://github.com/natnaeltibebu/resume-builder.git
+cd resume-builder
+npm install
+npm start
+```
 
 *Screenshots*
 Step 1 – Choose Template  
